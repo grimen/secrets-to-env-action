@@ -6,6 +6,22 @@ on:
       - "releases/*"
 
 jobs:
+  test-url-escape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export secrets to env variables (with exclude)
+        uses: ./
+        with:
+          secrets: ${{ toJSON(secrets) }}
+        env:
+          SECRET_1: 1234 # Should show override warning
+      - name: Verify secrets to env variables (with exclude)
+        run: |
+          [[ "${SECRET_3}" != "postgresql://postgres:postgres@example.com:5432/postgres?search_path=public&application_name=foo" ]] && echo "Could not export SECRET_3 secret, value is ${SECRET_3}" && exit 1
+          true
+        shell: bash
+        
   test-exclude:
     runs-on: ubuntu-latest
     steps:
