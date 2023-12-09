@@ -14,8 +14,6 @@ jobs:
         uses: ./
         with:
           secrets: ${{ toJSON(secrets) }}
-        env:
-          SECRET_1: 1234 # Should show override warning
       - name: Verify secrets to env variables (with exclude)
         run: |
           [[ "${SECRET_3}" != "postgresql://postgres:postgres@example.com:5432/postgres?search_path=public&application_name=foo" ]] && echo "Could not export SECRET_3 secret, value is ${SECRET_3}" && exit 1
